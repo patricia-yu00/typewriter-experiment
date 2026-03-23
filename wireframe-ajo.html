@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>AJO Journeys – Multi-select AI Bulk Actions</title>
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Adobe Clean", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #fff;
+    color: #2c2c2c;
+    font-size: 14px;
+    width: 1440px;
+    min-height: 900px;
+  }
+
+  /* Top nav */
+  .topnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 48px;
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .topnav-left { display: flex; align-items: center; gap: 12px; }
+  .topnav-logo { display: flex; align-items: center; gap: 8px; }
+  .topnav-logo svg { width: 28px; height: 28px; }
+  .topnav-title { font-size: 16px; font-weight: 600; color: #2c2c2c; }
+  .topnav-right { display: flex; align-items: center; gap: 16px; }
+  .env-badge {
+    background: #1473E6;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+  }
+  .sandbox-badge {
+    background: #f5f5f5;
+    color: #505050;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 14px;
+    border: 1px solid #ddd;
+  }
+  .topnav-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #e5e5e5;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: #505050;
+  }
+
+  /* Layout */
+  .layout { display: flex; height: calc(100vh - 48px); }
+
+  /* Sidebar */
+  .sidebar {
+    width: 52px;
+    background: #2c2c2c;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    gap: 8px;
+  }
+  .sidebar-icon {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: #9e9e9e;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .sidebar-icon.active { background: #1473E6; color: #fff; }
+
+  /* Main content */
+  .main { flex: 1; overflow: auto; padding: 0; position: relative; }
+
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 32px 16px;
+  }
+  .page-title { font-size: 22px; font-weight: 700; color: #2c2c2c; }
+  .btn-primary {
+    background: #1473E6;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* Smart suggestions banner */
+  .smart-suggestions {
+    margin: 0 32px 12px;
+    padding: 10px 16px;
+    background: #f0f7ff;
+    border: 1px solid #c8e0ff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #1473E6;
+    font-weight: 500;
+  }
+  .smart-suggestions .chevron { color: #505050; font-size: 11px; }
+
+  /* Table container */
+  .table-wrap {
+    margin: 0 32px;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Toolbar */
+  .table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid #e5e5e5;
+    background: #fff;
+  }
+  .toolbar-left { display: flex; align-items: center; gap: 10px; }
+  .toolbar-count { font-size: 13px; color: #505050; }
+  .search-box {
+    display: flex; align-items: center; gap: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px 10px;
+    width: 200px;
+    font-size: 13px; color: #808080;
+  }
+  .toolbar-right { display: flex; align-items: center; gap: 8px; }
+  .toolbar-btn {
+    width: 28px; height: 28px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: #505050;
+    cursor: pointer;
+    background: #fff;
+  }
+  .toolbar-btn.active { background: #1473E6; color: #fff; border-color: #1473E6; }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+  }
+  thead tr { background: #fafafa; border-bottom: 1px solid #e5e5e5; }
+  th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6e6e6e;
+    white-space: nowrap;
+    user-select: none;
+  }
+  th:first-child { width: 40px; }
+  td {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #2c2c2c;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+
+  tr.selected { background: #EBF3FF; }
+
+  /* Checkbox */
+  .cb {
+    width: 16px; height: 16px;
+    border-radius: 3px;
+    border: 2px solid #bbb;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    color: #fff;
+  }
+  .cb.checked { background: #1473E6; border-color: #1473E6; }
+  .cb.indeterminate { background: #1473E6; border-color: #1473E6; }
+
+  /* Status pills */
+  .status {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 500;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .status-dot.live { background: #12b886; }
+  .status-dot.draft { background: #aaa; }
+
+  /* Journey name link */
+  .jname { color: #1473E6; text-decoration: none; font-weight: 500; }
+
+  /* AI star icon */
+  .ai-star {
+    color: #bbb;
+    font-size: 15px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* ── AI Bulk Action Bar ─────────────────────────────────────────────────── */
+  .bulk-bar {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #1473E6;
+    color: #fff;
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    z-index: 100;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
+  }
+
+  .bulk-count {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    padding-right: 20px;
+    border-right: 1px solid rgba(255,255,255,0.3);
+    margin-right: 20px;
+  }
+
+  .bulk-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    margin-right: 12px;
+    white-space: nowrap;
+  }
+
+  .ai-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    flex-wrap: nowrap;
+  }
+
+  .ai-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .ai-chip:hover { background: rgba(255,255,255,0.25); }
+  .ai-chip .sparkle { font-size: 14px; }
+
+  .ai-chip.primary {
+    background: #fff;
+    color: #1473E6;
+    border-color: #fff;
+    font-weight: 600;
+  }
+
+  .bulk-dismiss {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    line-height: 1;
+  }
+  .bulk-dismiss:hover { color: #fff; background: rgba(255,255,255,0.15); }
+</style>
+</head>
+<body>
+
+<!-- Top Nav -->
+<div class="topnav">
+  <div class="topnav-left">
+    <div class="topnav-logo">
+      <!-- Adobe A logo placeholder -->
+      <svg viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="3" fill="#FF0000"/>
+        <path d="M14 5L22 23H18L16.5 19H11.5L10 23H6L14 5ZM14 11L12.2 16H15.8L14 11Z" fill="white"/>
+      </svg>
+      <span class="topnav-title">Adobe Journey Optimizer</span>
+    </div>
+  </div>
+  <div class="topnav-right">
+    <div class="env-badge">Prod</div>
+    <div class="sandbox-badge">Sandbox (Geo)</div>
+    <div class="topnav-icon">✉</div>
+    <div class="topnav-icon">?</div>
+    <div class="topnav-icon">🔔</div>
+    <div class="topnav-icon">⋮⋮⋮</div>
+    <div class="topnav-icon" style="background:#e0e0e0;font-weight:700;font-size:11px;">PY</div>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-icon">☰</div>
+    <div class="sidebar-icon">⌂</div>
+    <div class="sidebar-icon active">⬡</div>
+    <div class="sidebar-icon">📋</div>
+    <div class="sidebar-icon">✉</div>
+    <div class="sidebar-icon">👤</div>
+    <div class="sidebar-icon">🌐</div>
+    <div class="sidebar-icon">⛁</div>
+    <div class="sidebar-icon">📊</div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="page-header">
+      <div class="page-title">Journeys</div>
+      <button class="btn-primary">+ Create Journey</button>
+    </div>
+
+    <!-- Smart suggestions -->
+    <div class="smart-suggestions">
+      <span class="chevron">▼</span>
+      ✦ Smart suggestions
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <!-- Toolbar -->
+      <div class="table-toolbar">
+        <div class="toolbar-left">
+          <div class="search-box">
+            <span>🔍</span> Search
+          </div>
+          <span class="toolbar-count">10 of 10</span>
+        </div>
+        <div class="toolbar-right">
+          <div class="toolbar-btn">⇅</div>
+          <div class="toolbar-btn active">☰</div>
+          <div class="toolbar-btn">📅</div>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th><div class="cb indeterminate">—</div></th>
+            <th>Name ↕</th>
+            <th>Status ↕</th>
+            <th>Version ↕</th>
+            <th>Created by ↕</th>
+            <th>Created on ↕</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="selected">
+            <td><div class="cb checked">✓</div></td>
+            <td><span class="ai-star">✦</span> <a class="jname" href="#">Post-purchase Journey</a></td>
+            <td><span class="status"><span class="status-dot draft"></span> Draft</span></td>
+            <td>v.1 (latest)</td>
+            <td>Nicolas Dufau</td>
+            <td>11/18/2024, 7:41 PM</td>
+          </tr>
+          <tr class="selected">
+            <td><div class="cb checked">✓</div></td>
+            <td><span class="ai-star">✦</span> <a class="jname" href="#">E2E testing</a></td>
+            <td><span class="status"><span class="status-dot live"></span> Live</span></td>
+            <td>v.1 (latest)</td>
+            <td>Elliot Puzenat</td>
+            <td>06/23/2024, 8:50 AM</td>
+          </tr>
+          <tr class="selected">
+            <td><div class="cb checked">✓</div></td>
+            <td><span class="ai-star">✦</span> <a class="jname" href="#">Send free drinks</a></td>
+            <td><span class="status"><span class="status-dot draft"></span> Draft</span></td>
+            <td>v.1 (latest)</td>
+            <td>Alexis Tessier</td>
+            <td>05/23/2024, 8:50 AM</td>
+          </tr>
+          <tr>
+            <td><div class="cb"></div></td>
+            <td><span class="ai-star" style="color:#eee">✦</span> <a class="jname" href="#">News alert</a></td>
+            <td><span class="status"><span class="status-dot live"></span> Live</span></td>
+            <td>v.3 (latest)</td>
+            <td>Astghik Aghabekyan</td>
+            <td>06/23/2024, 8:50 AM</td>
+          </tr>
+          <tr>
+            <td><div class="cb"></div></td>
+            <td><span class="ai-star" style="color:#eee">✦</span> <a class="jname" href="#">Subscription page</a></td>
+            <td><span class="status"><span class="status-dot draft"></span> Draft</span></td>
+            <td>v.1</td>
+            <td>Alexis Tessier</td>
+            <td>05/23/2024, 8:50 AM</td>
+          </tr>
+          <tr>
+            <td><div class="cb"></div></td>
+            <td><span class="ai-star" style="color:#eee">✦</span> <a class="jname" href="#">COVID disclaimer</a></td>
+            <td><span class="status"><span class="status-dot draft"></span> Draft</span></td>
+            <td>v.1 (latest)</td>
+            <td>Stephen Becigneul</td>
+            <td>05/23/2024, 8:50 AM</td>
+          </tr>
+          <tr>
+            <td><div class="cb"></div></td>
+            <td><span class="ai-star" style="color:#eee">✦</span> <a class="jname" href="#">Campaign - 2023-09-19</a></td>
+            <td><span class="status"><span class="status-dot draft"></span> Draft</span></td>
+            <td>v.2 (latest)</td>
+            <td>Elliot Puzenat</td>
+            <td>05/23/2024, 8:50 AM</td>
+          </tr>
+          <tr>
+            <td><div class="cb"></div></td>
+            <td><span class="ai-star" style="color:#eee">✦</span> <a class="jname" href="#">Incentivize Business Travelers</a></td>
+            <td><span class="status"><span class="status-dot live"></span> Live</span></td>
+            <td>v.3 (latest)</td>
+            <td>Astghik Aghabekyan</td>
+            <td>05/23/2024, 8:50 AM</td>
+          </tr>
+        </tbody>
+      </table>
+    </div><!-- /table-wrap -->
+
+    <!-- AI Bulk Action Bar -->
+    <div class="bulk-bar">
+      <span class="bulk-count">✓ 3 selected</span>
+      <span class="bulk-label">✦ AI actions:</span>
+      <div class="ai-actions">
+        <div class="ai-chip primary">✦ Summarize selected</div>
+        <div class="ai-chip">✦ Find duplicates</div>
+        <div class="ai-chip">✦ Suggest optimizations</div>
+        <div class="ai-chip">✦ Auto-tag</div>
+        <div class="ai-chip">✦ Archive inactive</div>
+        <div class="ai-chip">✦ Compare journeys</div>
+      </div>
+      <button class="bulk-dismiss">✕</button>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+</body>
+</html>
