@@ -35,62 +35,46 @@
       overflow: visible;
     }
 
-    /* ── KEYBOARD: sits on top (z-index: 10), in document flow ───── */
-    /* margin-top creates the gap above where paper sticks out.
-       28vh works well on standard desktop viewports (800px+).        */
+    /* ── KEYBOARD ───────────────────────────────────────────────── */
     .keyboard-wrap {
       position: relative;
       width: 100%;
       margin-top: 32%;
       z-index: 10;
     }
-
     .keyboard-wrap img {
       width: 100%;
       display: block;
       pointer-events: none;
     }
 
-    /* ── CARRIAGE: behind keyboard (z-index: 1), slides L ↔ R ────── */
+    /* ── CARRIAGE ────────────────────────────────────────────────── */
     .carriage-wrap {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;           /* same display width as keyboard        */
-      z-index: 1;            /* BEHIND the keyboard                   */
+      top: 0; left: 0;
+      width: 100%;
+      z-index: 1;
       transform: translateX(0px);
       transition: transform 0.07s ease-out;
       will-change: transform;
       pointer-events: none;
     }
-
-    .carriage-wrap img {
-      width: 100%;
-      display: block;
-    }
-
-    /* Smooth carriage return */
+    .carriage-wrap img { width: 100%; display: block; }
     .carriage-wrap.returning {
       transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
 
-    /* ── PAPER TEXT AREA ─────────────────────────────────────────────
-       Inside carriage-wrap, moves with it. Positioned over the white
-       paper rectangle in the carriage image.
-       Adjust top / left / width / height to match your image.        */
+    /* ── PAPER TEXT AREA ─────────────────────────────────────────── */
     .paper-area {
       position: absolute;
-      top: 3%;
-      left: 27%;
-      width: 46%;
-      height: 17%;
+      top: 3%; left: 27%;
+      width: 46%; height: 17%;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       padding-bottom: 2px;
     }
-
     .typed-text {
       font-family: 'Special Elite', 'Courier New', monospace;
       font-size: clamp(9px, 1.6vw, 14px);
@@ -120,9 +104,7 @@
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
       opacity: 0; pointer-events: none; z-index: 20;
     }
-    .return-flash.active {
-      animation: flashLine 0.34s ease forwards;
-    }
+    .return-flash.active { animation: flashLine 0.34s ease forwards; }
     @keyframes flashLine {
       0%  { opacity: 0; transform: scaleX(0.2) translateX(-30%); }
       25% { opacity: 1; transform: scaleX(1)   translateX(0); }
@@ -132,20 +114,13 @@
     /* ── KEYS OVERLAY ────────────────────────────────────────────── */
     .keys-overlay {
       position: absolute;
-      top: calc(59% - 2px);
-      left: 50%;
+      top: calc(59% - 2px); left: 50%;
       width: 88%;
       transform: translateX(calc(-50% + 4px)) perspective(600px) rotateX(-5deg);
       transform-origin: bottom center;
       pointer-events: none;
     }
-
-    .keys-row {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 0.8%;
-    }
-
+    .keys-row { display: flex; justify-content: center; margin-bottom: 0.8%; }
     .key {
       background-image: url('key.png');
       background-size: 100% 100%;
@@ -164,11 +139,7 @@
       line-height: 1;
       padding-bottom: 3%;
     }
-
-    .key.pressed {
-      transform: translateY(3px) scale(0.96);
-      filter: brightness(0.8);
-    }
+    .key.pressed { transform: translateY(3px) scale(0.96); filter: brightness(0.8); }
 
     /* ── HINT ────────────────────────────────────────────────────── */
     .hint {
@@ -181,20 +152,18 @@
     }
     .hint.fade { opacity: 0; }
 
-    /* ── JAR SECTION ─────────────────────────────────── */
+    /* ── JAR SECTION ─────────────────────────────── */
     .jar-section {
       position: fixed;
-      bottom: 28px;
-      right: 28px;
+      bottom: 28px; right: 28px;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 12px;
       z-index: 20;
     }
-
     .seal-btn {
-      display: none; /* shown via JS when text exists */
+      display: none;
       font-family: 'Special Elite', monospace;
       font-size: clamp(11px, 1.4vw, 15px);
       color: #3a2a1a;
@@ -206,10 +175,7 @@
       margin-top: 18px;
       transition: background 0.2s, color 0.2s;
     }
-    .seal-btn:hover {
-      background: #a08060;
-      color: #fff;
-    }
+    .seal-btn:hover { background: #a08060; color: #fff; }
     .seal-flash {
       font-family: 'Special Elite', monospace;
       font-size: clamp(10px, 1.1vw, 13px);
@@ -230,18 +196,15 @@
     }
     .jar-wrap:hover { transform: scale(1.04); }
     .jar-wrap img { width: 100%; display: block; }
-
     .jar-count {
       position: absolute;
-      bottom: 18%;
-      left: 50%;
+      bottom: 18%; left: 50%;
       transform: translateX(-50%);
       font-family: 'Special Elite', monospace;
       font-size: clamp(9px, 1.2vw, 13px);
       color: #3a2a1a;
       pointer-events: none;
     }
-
     .hidden { display: none !important; }
 
     /* ── FIREFLY ORBS ─────────────────────────────── */
@@ -251,7 +214,6 @@
       pointer-events: none;
       overflow: hidden;
     }
-
     .orb {
       position: absolute;
       border-radius: 50%;
@@ -259,99 +221,83 @@
       will-change: transform, opacity;
     }
 
-/* ── JAR ZOOM VIEW ───────────────────────────────── */
-#jarView {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-  pointer-events: none;
-}
-#jarView.open {
-  opacity: 1;
-  transform: scale(1);
-  pointer-events: auto;
-}
-#jarViewBg {
-  position: relative;
-  width: min(90vw, 90vh);
-  height: min(90vw, 90vh);
-  border-radius: 50%;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-#jarViewBg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 62%,
-    rgba(0,0,0,0.5) 74%,
-    rgba(0,0,0,0.92) 84%,
-    #000 92%
-  );
-  pointer-events: none;
-  z-index: 5;
-}
-#jarViewBg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-#jarViewOrbContainer {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  overflow: hidden;
-  z-index: 10;
-}
-.jar-view-orb {
-  position: absolute;
-  border-radius: 50%;
-  cursor: pointer;
-  pointer-events: auto;
-  will-change: transform, opacity;
-  transition: filter 0.2s;
-}
-.jar-view-orb:hover {
-  filter: brightness(1.4);
-}
-#jarBackBtn {
-  position: fixed;
-  top: 24px;
-  left: 24px;
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.6);
-  font-size: 28px;
-  cursor: pointer;
-  z-index: 201;
-  line-height: 1;
-  transition: color 0.2s, opacity 0.4s ease-out;
-  opacity: 0;
-  pointer-events: none;
-}
-#jarBackBtn:hover { color: #fff; }
-#jarBackBtn.open {
-  opacity: 1;
-  pointer-events: auto;
-}
+    /* ── JAR ZOOM VIEW ───────────────────────────────── */
+    #jarView {
+      position: fixed; inset: 0;
+      background: #000;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+      pointer-events: none;
+    }
+    #jarView.open { opacity: 1; transform: scale(1); pointer-events: auto; }
+    #jarViewBg {
+      position: relative;
+      width: min(90vw, 90vh);
+      height: min(90vw, 90vh);
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    #jarViewBg::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 62%,
+        rgba(0,0,0,0.5) 74%,
+        rgba(0,0,0,0.92) 84%,
+        #000 92%
+      );
+      pointer-events: none;
+      z-index: 5;
+    }
+    #jarViewBg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #jarViewOrbContainer {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      z-index: 10;
+    }
+    .jar-view-orb {
+      position: absolute;
+      border-radius: 50%;
+      cursor: pointer;
+      pointer-events: auto;
+      will-change: transform, opacity;
+      transition: filter 0.2s;
+    }
+    .jar-view-orb:hover { filter: brightness(1.4); }
+    .jar-view-orb.is-image { border-radius: 2px; }
+
+    #jarBackBtn {
+      position: fixed;
+      top: 24px; left: 24px;
+      background: transparent; border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 28px;
+      cursor: pointer;
+      z-index: 201;
+      line-height: 1;
+      transition: color 0.2s, opacity 0.4s ease-out;
+      opacity: 0;
+      pointer-events: none;
+    }
+    #jarBackBtn:hover { color: #fff; }
+    #jarBackBtn.open { opacity: 1; pointer-events: auto; }
+
     #orbTooltip {
       position: fixed;
       z-index: 215;
       font-family: 'Special Elite', monospace;
       font-size: clamp(10px, 1.1vw, 13px);
-      color: rgba(255, 255, 255, 0.88);
-      background: rgba(0, 0, 0, 0.62);
+      color: rgba(255,255,255,0.88);
+      background: rgba(0,0,0,0.62);
       border: 1px solid rgba(255,255,255,0.12);
       padding: 4px 10px;
       pointer-events: none;
@@ -365,123 +311,260 @@
     }
     #orbTooltip.visible { opacity: 1; }
 
-/* ── PAPER UNFURL ──────────────────────────────────── */
-#letterReveal {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 210;
-  pointer-events: none;
-  background: transparent;
-}
-#letterReveal.visible {
-  pointer-events: auto;
-}
+    /* ── PAPER UNFURL (letter reveal from jar) ───────────────── */
+    #letterReveal {
+      position: fixed; inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 210;
+      pointer-events: none;
+      background: transparent;
+    }
+    #letterReveal.visible { pointer-events: auto; }
 
-#letterPaper {
-  position: relative;
-  width: min(420px, 82vw);
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"),
-    linear-gradient(160deg, #f5ead8 0%, #ede0c8 60%, #e8d8b8 100%);
-  border: 1px solid rgba(160,120,70,0.3);
-  padding: 36px 40px 40px;
-  box-shadow:
-    0 4px 32px rgba(0,0,0,0.55),
-    0 1px 0 rgba(255,255,255,0.15) inset;
-  transform: scaleX(0.04) scaleY(0.5);
-  opacity: 0;
-  transform-origin: center center;
-  transition: none;
-}
-#letterPaper.unfurl {
-  animation: paperUnfurl 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-#letterPaper.refurl {
-  animation: paperRefurl 0.3s cubic-bezier(0.55, 0, 0.78, 0) forwards;
-}
+    #letterPaper {
+      position: relative;
+      width: min(420px, 82vw);
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"),
+        linear-gradient(160deg, #f5ead8 0%, #ede0c8 60%, #e8d8b8 100%);
+      border: 1px solid rgba(160,120,70,0.3);
+      padding: 36px 40px 40px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.15) inset;
+      transform: scaleX(0.04) scaleY(0.5);
+      opacity: 0;
+      transform-origin: center center;
+      transition: none;
+      display: flex;
+      gap: 0;
+    }
 
-@keyframes paperUnfurl {
-  0%   { transform: scaleX(0.04) scaleY(0.5); opacity: 0; }
-  35%  { transform: scaleX(1)    scaleY(0.5); opacity: 1; }
-  100% { transform: scaleX(1)    scaleY(1);   opacity: 1; }
-}
-@keyframes paperRefurl {
-  0%   { transform: scaleX(1) scaleY(1);      opacity: 1; }
-  50%  { transform: scaleX(1) scaleY(0.4);    opacity: 0.8; }
-  100% { transform: scaleX(0.04) scaleY(0.4); opacity: 0; }
-}
+    /* Wider layout when letter has a drawing */
+    #letterReveal.has-drawing #letterPaper {
+      width: min(800px, 88vw);
+      gap: 28px;
+    }
+    #letterReveal.has-drawing #letterRevealDrawingPanel {
+      display: block;
+    }
 
-#letterRevealDate {
-  font-family: 'Special Elite', monospace;
-  font-size: clamp(9px, 1vw, 11px);
-  color: rgba(80,50,20,0.5);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin-bottom: 14px;
-  opacity: 0;
-  transition: opacity 0.25s ease 0.3s;
-}
-#letterRevealText {
-  font-family: 'Special Elite', monospace;
-  font-size: clamp(13px, 1.6vw, 18px);
-  color: rgba(40,24,8,0.88);
-  white-space: pre-wrap;
-  line-height: 1.8;
-  text-align: left;
-  max-width: 100%;
-  opacity: 0;
-  transition: opacity 0.3s ease 0.36s;
-}
-#letterPaper.text-visible #letterRevealDate,
-#letterPaper.text-visible #letterRevealText {
-  opacity: 1;
-}
-#letterRevealDate::after {
-  content: '';
-  display: block;
-  width: 100%;
-  height: 1px;
-  background: rgba(160,120,70,0.3);
-  margin-top: 10px;
-}
+    #letterPaper.unfurl {
+      animation: paperUnfurl 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    #letterPaper.refurl {
+      animation: paperRefurl 0.3s cubic-bezier(0.55, 0, 0.78, 0) forwards;
+    }
+    @keyframes paperUnfurl {
+      0%   { transform: scaleX(0.04) scaleY(0.5); opacity: 0; }
+      35%  { transform: scaleX(1)    scaleY(0.5); opacity: 1; }
+      100% { transform: scaleX(1)    scaleY(1);   opacity: 1; }
+    }
+    @keyframes paperRefurl {
+      0%   { transform: scaleX(1) scaleY(1);      opacity: 1; }
+      50%  { transform: scaleX(1) scaleY(0.4);    opacity: 0.8; }
+      100% { transform: scaleX(0.04) scaleY(0.4); opacity: 0; }
+    }
+
+    #letterRevealTextPanel { flex: 1; min-width: 0; }
+    #letterRevealDrawingPanel {
+      display: none;
+      flex-shrink: 0;
+      width: min(220px, 28vw);
+      align-self: flex-start;
+    }
+    #letterRevealDrawingImg {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid rgba(160,120,70,0.25);
+    }
+
+    #letterRevealDate {
+      font-family: 'Special Elite', monospace;
+      font-size: clamp(9px, 1vw, 11px);
+      color: rgba(80,50,20,0.5);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      opacity: 0;
+      transition: opacity 0.25s ease 0.3s;
+    }
+    #letterRevealText {
+      font-family: 'Special Elite', monospace;
+      font-size: clamp(13px, 1.6vw, 18px);
+      color: rgba(40,24,8,0.88);
+      white-space: pre-wrap;
+      line-height: 1.8;
+      text-align: left;
+      max-width: 100%;
+      opacity: 0;
+      transition: opacity 0.3s ease 0.36s;
+    }
+    #letterPaper.text-visible #letterRevealDate,
+    #letterPaper.text-visible #letterRevealText { opacity: 1; }
+    #letterRevealDate::after {
+      content: '';
+      display: block;
+      width: 100%; height: 1px;
+      background: rgba(160,120,70,0.3);
+      margin-top: 10px;
+    }
+
     .forget-btn {
       display: block;
       margin-top: 22px;
-      background: transparent;
-      border: none;
+      background: transparent; border: none;
       font-family: 'Special Elite', monospace;
       font-size: clamp(9px, 0.9vw, 11px);
-      color: rgba(100, 60, 20, 0.35);
+      color: rgba(100,60,20,0.35);
       letter-spacing: 0.18em;
       cursor: pointer;
       padding: 0;
       transition: color 0.2s;
     }
-    .forget-btn:hover { color: rgba(160, 40, 20, 0.7); }
+    .forget-btn:hover { color: rgba(160,40,20,0.7); }
+
+    /* ── DRAW STEP OVERLAY ───────────────────────────────────────── */
+    #drawStep {
+      position: fixed; inset: 0;
+      background: rgba(10, 8, 6, 0.96);
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #drawStep.open { opacity: 1; pointer-events: auto; }
+
+    #drawStepInner {
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      width: min(860px, 90vw);
+    }
+    #drawLetterPanel { flex: 1; min-width: 0; }
+    #drawLetterPaper {
+      background: linear-gradient(160deg, #f5ead8 0%, #ede0c8 60%, #e8d8b8 100%);
+      border: 1px solid rgba(160,120,70,0.3);
+      padding: 24px 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+      font-family: 'Special Elite', monospace;
+    }
+    #drawLetterDate {
+      font-size: clamp(9px, 0.9vw, 11px);
+      color: rgba(80,50,20,0.5);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(160,120,70,0.3);
+    }
+    #drawLetterText {
+      font-size: clamp(12px, 1.3vw, 15px);
+      color: rgba(40,24,8,0.88);
+      white-space: pre-wrap;
+      line-height: 1.8;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+
+    #drawCanvasPanel {
+      flex: 1; min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    #drawCanvasLabel {
+      font-family: 'Special Elite', monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,0.28);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    #drawToolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .color-swatch {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      flex-shrink: 0;
+      transition: border-color 0.15s, transform 0.1s;
+    }
+    .color-swatch:hover { transform: scale(1.18); }
+    .color-swatch.active { border-color: rgba(255,255,255,0.85); }
+
+    #eraserBtn {
+      font-family: 'Special Elite', monospace;
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 4px 10px;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      margin-left: auto;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    #eraserBtn:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.1); }
+    #eraserBtn.active { background: rgba(255,255,255,0.18); color: #fff; border-color: rgba(255,255,255,0.5); }
+
+    #drawCanvas {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      cursor: crosshair;
+      display: block;
+      touch-action: none;
+    }
+
+    #placeInJarBtn {
+      font-family: 'Special Elite', monospace;
+      font-size: clamp(12px, 1.3vw, 15px);
+      color: #3a2a1a;
+      background: #c8a96e;
+      border: none;
+      padding: 10px 40px;
+      cursor: pointer;
+      letter-spacing: 0.15em;
+      transition: background 0.2s;
+    }
+    #placeInJarBtn:hover:not(:disabled) { background: #d4b87a; }
+    #placeInJarBtn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    @media (max-width: 600px) {
+      #drawStepInner { flex-direction: column; gap: 16px; }
+      #drawLetterText { max-height: 20vh; }
+    }
   </style>
 </head>
 <body>
 
   <div class="scene">
-
-    <!-- CARRIAGE — behind keyboard, slides left ↔ right -->
+    <!-- CARRIAGE -->
     <div class="carriage-wrap" id="carriage">
       <img src="carriage.png" alt="" draggable="false">
       <div class="paper-area">
         <div class="typed-text" id="typedText"><span class="cursor"></span></div>
       </div>
     </div>
-
-    <!-- KEYBOARD — fixed, sits on top of carriage -->
+    <!-- KEYBOARD -->
     <div class="keyboard-wrap" id="keyboard">
       <img src="no keys.png" alt="" draggable="false">
       <div class="return-flash" id="returnFlash"></div>
       <div class="keys-overlay" id="keysOverlay"></div>
     </div>
-
   </div>
 
   <button id="sealBtn" class="seal-btn">✦ Seal &amp; Store ✦</button>
@@ -505,12 +588,45 @@
   </div>
   <button id="jarBackBtn">←</button>
   <div id="orbTooltip"></div>
+
+  <!-- Letter reveal (opened from jar) -->
   <div id="letterReveal">
     <div id="letterPaper">
-      <div id="letterRevealDate"></div>
-      <div id="letterRevealText"></div>
-      <button id="forgetBtn" class="forget-btn">forget</button>
+      <div id="letterRevealTextPanel">
+        <div id="letterRevealDate"></div>
+        <div id="letterRevealText"></div>
+        <button id="forgetBtn" class="forget-btn">forget</button>
+      </div>
+      <div id="letterRevealDrawingPanel">
+        <img id="letterRevealDrawingImg" alt="" draggable="false" />
+      </div>
     </div>
+  </div>
+
+  <!-- Draw step overlay (in-between writing and sealing) -->
+  <div id="drawStep">
+    <div id="drawStepInner">
+      <div id="drawLetterPanel">
+        <div id="drawLetterPaper">
+          <div id="drawLetterDate"></div>
+          <div id="drawLetterText"></div>
+        </div>
+      </div>
+      <div id="drawCanvasPanel">
+        <p id="drawCanvasLabel">draw something for your memory</p>
+        <div id="drawToolbar">
+          <div class="color-swatch active" data-color="#1a0e06" style="background:#1a0e06;"></div>
+          <div class="color-swatch" data-color="#c0392b" style="background:#c0392b;"></div>
+          <div class="color-swatch" data-color="#2980b9" style="background:#2980b9;"></div>
+          <div class="color-swatch" data-color="#27ae60" style="background:#27ae60;"></div>
+          <div class="color-swatch" data-color="#f39c12" style="background:#f39c12;"></div>
+          <div class="color-swatch" data-color="#8e44ad" style="background:#8e44ad;"></div>
+          <button id="eraserBtn">eraser</button>
+        </div>
+        <canvas id="drawCanvas"></canvas>
+      </div>
+    </div>
+    <button id="placeInJarBtn" disabled>✦ place in jar ✦</button>
   </div>
 
   <p class="hint" id="hint">— start typing —</p>
@@ -525,12 +641,10 @@
     ];
     const keyMap = {};
     const overlay = document.getElementById('keysOverlay');
-    const keySlotW = 6 + 0.6; // key width% + both margins%
 
-    KEY_ROWS.forEach(({ keys, offset }) => {
+    KEY_ROWS.forEach(({ keys }) => {
       const row = document.createElement('div');
       row.className = 'keys-row';
-      // rows are center-justified; natural length differences create the stagger
       keys.forEach(k => {
         const el = document.createElement('div');
         el.className = 'key';
@@ -549,7 +663,6 @@
     }
 
     const carriage    = document.getElementById('carriage');
-    const keyboard    = document.getElementById('keyboard');
     const typedText   = document.getElementById('typedText');
     const returnFlash = document.getElementById('returnFlash');
     const hint        = document.getElementById('hint');
@@ -560,11 +673,10 @@
     let isReturning = false;
     let started     = false;
 
-    const STEP_PX = 3;    // px per character (carriage visual movement)
-    const MAX_X   = 220;  // visual cap on carriage travel
-    const BELL_PX = 18;   // warn bell this many px before end
+    const STEP_PX = 3;
+    const MAX_X   = 220;
+    const BELL_PX = 18;
 
-    // Hidden canvas for accurate text-width measurement
     const _mCtx = document.createElement('canvas').getContext('2d');
     function currentLineWidth() {
       const st = getComputedStyle(typedText);
@@ -583,7 +695,6 @@
       if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       return audioCtx;
     }
-
     function playClick() {
       try {
         const ctx = ac(), t = ctx.currentTime;
@@ -598,7 +709,6 @@
         src.connect(bpf); bpf.connect(g); g.connect(ctx.destination); src.start(t);
       } catch (_) {}
     }
-
     function playBell() {
       try {
         const ctx = ac(), t = ctx.currentTime;
@@ -609,7 +719,6 @@
         osc.connect(env); env.connect(ctx.destination); osc.start(t); osc.stop(t + 1.2);
       } catch (_) {}
     }
-
     function playSlide() {
       try {
         const ctx = ac(), t = ctx.currentTime + 0.06, dur = 0.3;
@@ -630,7 +739,6 @@
       typedText.appendChild(cursor);
       updateSealBtn();
     }
-
     function flashReturn() {
       returnFlash.classList.remove('active'); void returnFlash.offsetWidth;
       returnFlash.classList.add('active');
@@ -640,17 +748,14 @@
     function advanceCarriage() {
       carriageX = Math.min(carriageX + STEP_PX, MAX_X);
       carriage.style.transform = `translateX(${carriageX}px)`;
-      // Warning bell a few chars before end
       const pw = paperWidth();
       const lw = currentLineWidth();
       if (lw >= pw - BELL_PX && lw < pw - BELL_PX + STEP_PX * 2) playBell();
     }
-
     function retreatCarriage() {
       carriageX = Math.max(0, carriageX - STEP_PX);
       carriage.style.transform = `translateX(${carriageX}px)`;
     }
-
     function returnCarriage() {
       isReturning = true;
       playBell(); setTimeout(playSlide, 55); flashReturn();
@@ -664,13 +769,11 @@
     function typeChar(ch) {
       if (!started) { started = true; hint.classList.add('fade'); }
       lines[lineIndex] += ch; updateDisplay();
-      // Auto-return when text fills the paper width
       if (currentLineWidth() >= paperWidth() - 4) {
         playClick(); returnCarriage(); return;
       }
       advanceCarriage(); playClick();
     }
-
     function doBackspace() {
       if (!lines[lineIndex].length) return;
       lines[lineIndex] = lines[lineIndex].slice(0, -1); updateDisplay();
@@ -679,6 +782,7 @@
 
     document.addEventListener('keydown', e => {
       if (e.ctrlKey || e.metaKey || e.altKey || isReturning) return;
+      if (document.getElementById('drawStep').classList.contains('open')) return;
       if      (e.key === 'Enter')     { e.preventDefault(); returnCarriage(); }
       else if (e.key === 'Backspace') { e.preventDefault(); doBackspace(); }
       else if (e.key.length === 1)    { e.preventDefault(); animateKey(e.key); typeChar(e.key); }
@@ -687,30 +791,22 @@
     updateDisplay();
 
     // ── JAR STORAGE ───────────────────────────────────
-    const sealBtn        = document.getElementById('sealBtn');
-    const jarWrap        = document.getElementById('jarWrap');
-    const jarCount       = document.getElementById('jarCount');
+    const sealBtn  = document.getElementById('sealBtn');
+    const jarWrap  = document.getElementById('jarWrap');
+    const jarCount = document.getElementById('jarCount');
 
     function getLetters() {
-      try {
-        return JSON.parse(localStorage.getItem('jarLetters') || '[]');
-      } catch(e) {
-        return [];
-      }
+      try { return JSON.parse(localStorage.getItem('jarLetters') || '[]'); }
+      catch(e) { return []; }
     }
     function saveLetters(arr) {
-      try {
-        localStorage.setItem('jarLetters', JSON.stringify(arr));
-      } catch(e) {
-        // storage unavailable (e.g. private mode quota exceeded)
-      }
+      try { localStorage.setItem('jarLetters', JSON.stringify(arr)); } catch(e) {}
     }
-
     function getOrbs() {
       try { return JSON.parse(localStorage.getItem('jarOrbs') || '[]'); } catch { return []; }
     }
     function saveOrbs(arr) {
-      try { localStorage.setItem('jarOrbs', JSON.stringify(arr)); } catch {} // private mode / quota
+      try { localStorage.setItem('jarOrbs', JSON.stringify(arr)); } catch {}
     }
 
     function updateJarUI(newOrbs) {
@@ -721,68 +817,23 @@
       } else {
         jarWrap.classList.add('hidden');
       }
-
       if (newOrbs) {
-        // Accumulate and persist; visual handled by launchOrbsToJar
         const existing = getOrbs();
-        const merged = existing.concat(newOrbs).slice(-60);
+        // Strip drawing from orb data before persisting — drawings live in letters
+        const toSave = newOrbs.map(o => ({ color: o.color, size: o.size }));
+        const merged = existing.concat(toSave).slice(-60);
         saveOrbs(merged);
       }
     }
 
-    function restoreOrbs(orbData) {
-      const orbCon = document.getElementById('orbContainer');
-      // Clear any existing orb elements
-      orbCon.innerHTML = '';
-      orbFloaters.length = 0;
-      if (floatRafId) { cancelAnimationFrame(floatRafId); floatRafId = null; }
-      if (!orbData.length) return;
-
-      // Match the zoom view: show at most 10 orbs
-      const displayData = orbData.slice(-10);
-
-      // Force fresh bounds — image may not have loaded yet
-      _cachedBounds = null;
-      const bounds = getJarInnerBounds();
-
-      // If image isn't laid out yet, place orbs off-screen at (0,0) temporarily;
-      // tickFloat will skip physics until bounds are valid, then snap them in.
-      const safeLeft   = bounds ? bounds.left   : 0;
-      const safeTop    = bounds ? bounds.top    : 0;
-      const safeRight  = bounds ? bounds.right  : 0;
-      const safeBottom = bounds ? bounds.bottom : 0;
-
-      displayData.forEach(o => {
-        const size   = o.size || 14;
-        const x      = bounds ? randBetween(safeLeft, safeRight  - size) : 0;
-        const y      = bounds ? randBetween(safeTop,  safeBottom - size) : 0;
-        const speed  = randBetween(0.3, 0.8);
-        const angle  = Math.random() * Math.PI * 2;
-        const el     = createOrbElement(o.color, size);
-        el.style.opacity   = '0';
-        el.style.transform = `translate(${x}px, ${y}px)`;
-        orbCon.appendChild(el);
-        orbFloaters.push({
-          el, x, y,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          phase: Math.random() * Math.PI * 2,
-          size, color: o.color,
-        });
-      });
-      startFloatLoop();
-    }
-
     // ── FIREFLY ORB SYSTEM ─────────────────────────
-    // Each color entry is [lightTone, midTone] — stored as-is in localStorage
-    // createOrbElement destructures it as const [light, mid] = color
     const ORB_PALETTE = [
-      ['#ffe0f0','#e060a0'],  // rose
-      ['#e8e0ff','#9060e0'],  // lavender
-      ['#d0eeff','#4090d0'],  // sky blue
-      ['#d0ffe8','#40c080'],  // mint
-      ['#fff3c0','#d0a020'],  // amber
-      ['#ffe8d0','#e08040'],  // peach
+      ['#ffe0f0','#e060a0'],
+      ['#e8e0ff','#9060e0'],
+      ['#d0eeff','#4090d0'],
+      ['#d0ffe8','#40c080'],
+      ['#fff3c0','#d0a020'],
+      ['#ffe8d0','#e08040'],
     ];
 
     function randBetween(a, b) { return a + Math.random() * (b - a); }
@@ -798,10 +849,22 @@
       return el;
     }
 
-    const orbFloaters = []; // { el, x, y, vx, vy, phase, size }
-    let floatRafId = null;
+    function createDrawingElement(drawing, size) {
+      const el = document.createElement('img');
+      el.src = drawing;
+      el.style.position = 'absolute';
+      el.style.width  = size + 'px';
+      el.style.height = size + 'px';
+      el.style.objectFit = 'contain';
+      el.style.borderRadius = '2px';
+      el.draggable = false;
+      return el;
+    }
 
+    const orbFloaters = [];
+    let floatRafId = null;
     let _cachedBounds = null;
+
     window.addEventListener('resize', () => {
       _cachedBounds = null;
       if (_jarContainerRect) {
@@ -812,18 +875,17 @@
 
     function getJarInnerBounds() {
       if (_cachedBounds) return _cachedBounds;
-      const jarImg = document.getElementById('jarImg');
+      const jarImg    = document.getElementById('jarImg');
       const container = document.getElementById('orbContainer');
       if (!jarImg || !container) return { left: 0, top: 0, right: 0, bottom: 0 };
       const jarR = jarImg.getBoundingClientRect();
-      // Image not yet laid out — don't cache, caller should retry
       if (jarR.width === 0 || jarR.height === 0) return null;
-      const conR = container.getBoundingClientRect();
-      const ix      = jarR.width  * 0.22;   // horizontal — inside the glass walls
-      const iyTop   = jarR.height * 0.38;   // below the lid/neck
-      const iyBottom = jarR.height * 0.10;  // above the base
-      const offsetX = conR.left - jarR.left;
-      const offsetY = conR.top  - jarR.top;
+      const conR      = container.getBoundingClientRect();
+      const ix        = jarR.width  * 0.22;
+      const iyTop     = jarR.height * 0.38;
+      const iyBottom  = jarR.height * 0.10;
+      const offsetX   = conR.left - jarR.left;
+      const offsetY   = conR.top  - jarR.top;
       _cachedBounds = {
         left:   ix - offsetX,
         top:    iyTop    - offsetY,
@@ -836,32 +898,74 @@
     function tickFloat() {
       if (orbFloaters.length === 0) { floatRafId = null; return; }
       const bounds = getJarInnerBounds();
-      // Image not yet laid out — retry next frame
       if (!bounds) { floatRafId = requestAnimationFrame(tickFloat); return; }
       orbFloaters.forEach(o => {
-        o.x += o.vx;
-        o.y += o.vy;
-        // Bounce off bounds
-        if (o.x <= bounds.left)                   { o.x = bounds.left;                  o.vx =  Math.abs(o.vx); }
-        if (o.x + o.size >= bounds.right)         { o.x = bounds.right  - o.size;       o.vx = -Math.abs(o.vx); }
-        if (o.y <= bounds.top)                    { o.y = bounds.top;                   o.vy =  Math.abs(o.vy); }
-        if (o.y + o.size >= bounds.bottom)        { o.y = bounds.bottom - o.size;       o.vy = -Math.abs(o.vy); }
-        // Opacity pulse
-        o.phase += 0.012;
-        const opacity = 0.6 + 0.4 * Math.sin(o.phase);
+        o.x += o.vx; o.y += o.vy;
+        if (o.x <= bounds.left)              { o.x = bounds.left;            o.vx =  Math.abs(o.vx); }
+        if (o.x + o.size >= bounds.right)    { o.x = bounds.right  - o.size; o.vx = -Math.abs(o.vx); }
+        if (o.y <= bounds.top)               { o.y = bounds.top;             o.vy =  Math.abs(o.vy); }
+        if (o.y + o.size >= bounds.bottom)   { o.y = bounds.bottom - o.size; o.vy = -Math.abs(o.vy); }
+        if (!o.isImage) {
+          o.phase += 0.012;
+          o.el.style.opacity = 0.6 + 0.4 * Math.sin(o.phase);
+        } else {
+          o.el.style.opacity = '1';
+        }
         o.el.style.transform = `translate(${o.x}px, ${o.y}px)`;
-        o.el.style.opacity = opacity;
       });
       floatRafId = requestAnimationFrame(tickFloat);
     }
-
     function startFloatLoop() {
-      if (floatRafId) return; // already running
+      if (floatRafId) return;
       floatRafId = requestAnimationFrame(tickFloat);
     }
 
+    function restoreOrbs(orbData) {
+      const letters = getLetters();
+      const orbCon  = document.getElementById('orbContainer');
+      orbCon.innerHTML = '';
+      orbFloaters.length = 0;
+      if (floatRafId) { cancelAnimationFrame(floatRafId); floatRafId = null; }
+      if (!orbData.length) return;
+
+      const startIdx   = Math.max(0, orbData.length - 10);
+      const displayData = orbData.slice(startIdx);
+
+      _cachedBounds = null;
+      const bounds = getJarInnerBounds();
+      const safeLeft   = bounds ? bounds.left   : 0;
+      const safeTop    = bounds ? bounds.top    : 0;
+      const safeRight  = bounds ? bounds.right  : 0;
+      const safeBottom = bounds ? bounds.bottom : 0;
+
+      displayData.forEach((o, i) => {
+        const letterIdx = startIdx + i;
+        const drawing   = letters[letterIdx]?.drawing;
+        const size      = drawing ? 40 : (o.size || 14);
+        const x         = bounds ? randBetween(safeLeft,  safeRight  - size) : 0;
+        const y         = bounds ? randBetween(safeTop,   safeBottom - size) : 0;
+        const speed     = randBetween(0.3, 0.8);
+        const angle     = Math.random() * Math.PI * 2;
+
+        const el = drawing ? createDrawingElement(drawing, size) : createOrbElement(o.color, size);
+        el.style.opacity   = drawing ? '1' : '0';
+        el.style.transform = `translate(${x}px, ${y}px)`;
+        orbCon.appendChild(el);
+
+        orbFloaters.push({
+          el, x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          phase: Math.random() * Math.PI * 2,
+          size, color: o.color,
+          isImage: !!drawing,
+        });
+      });
+      startFloatLoop();
+    }
+
     // ── JAR VIEW ──────────────────────────────────────
-    const jarViewFloaters = []; // { el, x, y, vx, vy, phase, size, letterIndex, maxSpeed }
+    const jarViewFloaters = [];
     let jarViewRafId = null;
     let _jarMouseX = -9999, _jarMouseY = -9999;
     let _jarContainerRect = null;
@@ -871,10 +975,10 @@
     function getJarViewBounds() {
       const bg = document.getElementById('jarViewBg');
       if (!bg) return { cx: 0, cy: 0, r: 0 };
-      const rect = bg.getBoundingClientRect();
-      const radius = rect.width * 0.24;           // inner glass opening
+      const rect   = bg.getBoundingClientRect();
+      const radius = rect.width * 0.24;
       const cx     = rect.width  * 0.50;
-      const cy     = rect.height * 0.54;          // slightly below center (the jar floor)
+      const cy     = rect.height * 0.54;
       return { cx, cy, r: radius };
     }
 
@@ -882,7 +986,6 @@
       if (jarViewFloaters.length === 0) { jarViewRafId = null; return; }
       const { cx, cy, r } = getJarViewBounds();
 
-      // Detect which floater the cursor is over
       let hoveredIdx = -1;
       jarViewFloaters.forEach((o, i) => {
         const dx = _jarMouseX - (o.x + o.size / 2);
@@ -891,7 +994,6 @@
       });
 
       jarViewFloaters.forEach((o, i) => {
-        // Velocity damping / recovery
         const spd = Math.sqrt(o.vx * o.vx + o.vy * o.vy);
         if (i === hoveredIdx) {
           o.vx *= 0.88; o.vy *= 0.88;
@@ -903,7 +1005,7 @@
         }
 
         o.x += o.vx; o.y += o.vy;
-        const dx = o.x + o.size/2 - cx, dy = o.y + o.size/2 - cy;
+        const dx   = o.x + o.size/2 - cx, dy = o.y + o.size/2 - cy;
         const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist + o.size/2 > r) {
           const nx = dx/dist, ny = dy/dist;
@@ -912,16 +1014,19 @@
           const overlap = dist + o.size/2 - r;
           o.x -= nx*overlap; o.y -= ny*overlap;
         }
-        o.phase += 0.012;
+        if (!o.isImage) {
+          o.phase += 0.012;
+          o.el.style.opacity = 0.65 + 0.35 * Math.sin(o.phase);
+        } else {
+          o.el.style.opacity = '1';
+        }
         o.el.style.transform = `translate(${o.x}px, ${o.y}px)`;
-        o.el.style.opacity = 0.65 + 0.35 * Math.sin(o.phase);
       });
 
-      // Update tooltip
       const tooltip = _orbTooltipEl;
       if (tooltip && _jarContainerRect) {
         if (hoveredIdx >= 0) {
-          const o = jarViewFloaters[hoveredIdx];
+          const o      = jarViewFloaters[hoveredIdx];
           const letter = _jarViewLetters[o.letterIndex];
           if (letter) {
             const preview = letter.text.slice(0, 42) + (letter.text.length > 42 ? '…' : '');
@@ -934,25 +1039,21 @@
           tooltip.classList.remove('visible');
         }
       }
-
       jarViewRafId = requestAnimationFrame(tickJarView);
     }
-
     function startJarViewLoop() {
       if (jarViewRafId) return;
       jarViewRafId = requestAnimationFrame(tickJarView);
     }
-
     function stopJarViewLoop() {
       if (jarViewRafId) { cancelAnimationFrame(jarViewRafId); jarViewRafId = null; }
     }
 
     function openJarView() {
-      const letters  = getLetters();
-      const orbData  = getOrbs();
+      const letters = getLetters();
+      const orbData = getOrbs();
       if (!letters.length) return;
 
-      // Pick up to 10 random indices from the full pool
       const allIndices = letters.map((_, i) => i);
       for (let i = allIndices.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -960,35 +1061,35 @@
       }
       const selectedIndices = allIndices.slice(0, 10);
 
-      const jarView    = document.getElementById('jarView');
-      const orbCon     = document.getElementById('jarViewOrbContainer');
-      const backBtn    = document.getElementById('jarBackBtn');
+      const jarView = document.getElementById('jarView');
+      const orbCon  = document.getElementById('jarViewOrbContainer');
+      const backBtn = document.getElementById('jarBackBtn');
 
-      // Clear previous
       orbCon.innerHTML = '';
       jarViewFloaters.length = 0;
       stopJarViewLoop();
 
-      // Show overlay
       jarView.classList.add('open');
       backBtn.classList.add('open');
 
-      // Wait one frame so transition fires, then compute bounds and spawn orbs
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           const { cx, cy, r } = getJarViewBounds();
           selectedIndices.forEach(letterIndex => {
-            const o     = orbData[letterIndex] || { color: ORB_PALETTE[Math.floor(Math.random()*ORB_PALETTE.length)], size: 18 };
-            const size  = Math.round(randBetween(24, 38));
-            const angle = Math.random() * Math.PI * 2;
-            const dist  = Math.random() * (r - size);
+            const letter  = letters[letterIndex];
+            const o       = orbData[letterIndex] || { color: ORB_PALETTE[Math.floor(Math.random()*ORB_PALETTE.length)], size: 18 };
+            const drawing = letter?.drawing;
+            const size    = drawing ? 70 : Math.round(randBetween(24, 38));
+            const angle   = Math.random() * Math.PI * 2;
+            const dist    = Math.random() * Math.max(0, r - size);
             const x = cx - size/2 + Math.cos(angle) * dist;
             const y = cy - size/2 + Math.sin(angle) * dist;
-            const speed = randBetween(0.4, 1.0);
+            const speed  = randBetween(0.4, 1.0);
             const vAngle = Math.random() * Math.PI * 2;
 
-            const el = createOrbElement(o.color, size);
+            const el = drawing ? createDrawingElement(drawing, size) : createOrbElement(o.color, size);
             el.classList.add('jar-view-orb');
+            if (drawing) el.classList.add('is-image');
             el.style.opacity = '0';
             el.style.transform = `translate(${x}px, ${y}px)`;
             el.dataset.letterIndex = letterIndex;
@@ -999,9 +1100,9 @@
               vx: Math.cos(vAngle) * speed,
               vy: Math.sin(vAngle) * speed,
               phase: Math.random() * Math.PI * 2,
-              size,
-              letterIndex,
+              size, letterIndex,
               maxSpeed: speed,
+              isImage: !!drawing,
             });
           });
 
@@ -1027,7 +1128,6 @@
       if (_orbTooltipEl) _orbTooltipEl.classList.remove('visible');
       _orbTooltipEl = null;
 
-      // Clear orbs after transition
       setTimeout(() => {
         document.getElementById('jarViewOrbContainer').innerHTML = '';
         jarViewFloaters.length = 0;
@@ -1046,6 +1146,7 @@
 
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
+        if (document.getElementById('drawStep').classList.contains('open')) return;
         if (!document.getElementById('jarView').classList.contains('open')) return;
         if (!document.getElementById('letterReveal').classList.contains('visible')) {
           closeJarView();
@@ -1055,8 +1156,9 @@
       }
     });
 
-    let _textVisibleTimer = null;
-    let _revealingLetterIdx = null;
+    // ── LETTER REVEAL ─────────────────────────────────
+    let _textVisibleTimer    = null;
+    let _revealingLetterIdx  = null;
 
     function showLetterReveal(letter, idx) {
       _revealingLetterIdx = idx;
@@ -1064,8 +1166,17 @@
       document.getElementById('letterRevealDate').textContent = letter.date;
       document.getElementById('letterRevealText').textContent = letter.text;
 
-      const reveal = document.getElementById('letterReveal');
-      const paper  = document.getElementById('letterPaper');
+      const reveal     = document.getElementById('letterReveal');
+      const paper      = document.getElementById('letterPaper');
+      const drawingImg = document.getElementById('letterRevealDrawingImg');
+
+      if (letter.drawing) {
+        drawingImg.src = letter.drawing;
+        reveal.classList.add('has-drawing');
+      } else {
+        drawingImg.src = '';
+        reveal.classList.remove('has-drawing');
+      }
 
       paper.classList.remove('refurl', 'unfurl', 'text-visible');
       reveal.classList.add('visible');
@@ -1084,7 +1195,7 @@
       paper.classList.add('refurl');
 
       setTimeout(() => {
-        reveal.classList.remove('visible');
+        reveal.classList.remove('visible', 'has-drawing');
         paper.classList.remove('refurl');
       }, 320);
     }
@@ -1092,26 +1203,20 @@
     document.getElementById('jarViewOrbContainer').addEventListener('click', e => {
       const orbEl = e.target.closest('.jar-view-orb');
       if (!orbEl) return;
-
       const idx    = parseInt(orbEl.dataset.letterIndex, 10);
       const letter = getLetters()[idx];
       if (!letter) return;
-
       showLetterReveal(letter, idx);
     });
 
-    // Click backdrop → hide reveal
     document.getElementById('letterReveal').addEventListener('click', e => {
-      if (e.target === document.getElementById('letterReveal')) {
-        hideLetterReveal();
-      }
+      if (e.target === document.getElementById('letterReveal')) hideLetterReveal();
     });
 
     document.getElementById('forgetBtn').addEventListener('click', () => {
       const idx = _revealingLetterIdx;
       if (idx === null) return;
 
-      // Remove from storage
       const letters = getLetters();
       const orbs    = getOrbs();
       letters.splice(idx, 1);
@@ -1119,13 +1224,11 @@
       saveLetters(letters);
       saveOrbs(orbs);
 
-      // Remove orb element from jar view + re-index floaters
       const floaterIdx = jarViewFloaters.findIndex(f => f.letterIndex === idx);
       if (floaterIdx >= 0) {
         jarViewFloaters[floaterIdx].el.remove();
         jarViewFloaters.splice(floaterIdx, 1);
       }
-      // Decrement letterIndex for all floaters that pointed past the deleted one
       jarViewFloaters.forEach(f => {
         if (f.letterIndex > idx) {
           f.letterIndex--;
@@ -1136,78 +1239,76 @@
       _revealingLetterIdx = null;
       updateJarUI();
       hideLetterReveal();
-
-      // If jar is now empty, close jar view
       if (!getLetters().length) closeJarView();
     });
 
+    // ── LAUNCH ANIMATION ──────────────────────────────
     function launchOrbsToJar(text, orbData) {
       if (!text.trim()) return;
 
-      // One orb per letter — launch a single orb
       [0].forEach((_, i) => {
         setTimeout(() => {
           const paperArea2 = document.querySelector('.paper-area');
           const orbCon2    = document.getElementById('orbContainer');
           if (!paperArea2 || !orbCon2) return;
+
           const paperR2 = paperArea2.getBoundingClientRect();
           const conR2   = orbCon2.getBoundingClientRect();
           const srcX2 = paperR2.left + paperR2.width  / 2;
           const srcY2 = paperR2.top  + paperR2.height / 2;
           const dstX2 = conR2.left  + conR2.width  / 2;
           const dstY2 = conR2.top   + conR2.height / 2;
-          const color  = orbData[i] ? orbData[i].color : ORB_PALETTE[Math.floor(Math.random() * ORB_PALETTE.length)];
-          const size   = orbData[i] ? orbData[i].size  : Math.round(randBetween(10, 18));
 
-          // Create a flying orb fixed to viewport
-          const flier = createOrbElement(color, size);
-          flier.style.position = 'fixed';
-          flier.style.left = (srcX2 - size / 2) + 'px';
-          flier.style.top  = (srcY2 - size / 2) + 'px';
+          const orbInfo = orbData[i] || {};
+          const drawing = orbInfo.drawing;
+          const color   = orbInfo.color || ORB_PALETTE[Math.floor(Math.random() * ORB_PALETTE.length)];
+          const size    = drawing ? 40 : (orbInfo.size || Math.round(randBetween(10, 18)));
+
+          const flier = drawing ? createDrawingElement(drawing, size) : createOrbElement(color, size);
+          flier.style.position  = 'fixed';
+          flier.style.width     = size + 'px';
+          flier.style.height    = size + 'px';
+          flier.style.left      = (srcX2 - size / 2) + 'px';
+          flier.style.top       = (srcY2 - size / 2) + 'px';
           flier.style.transition = 'none';
-          flier.style.opacity = '0';
+          flier.style.opacity   = '0';
           document.body.appendChild(flier);
 
-          // Arc flight via Web Animations
           const midX = (srcX2 + dstX2) / 2 + randBetween(-40, 40);
           const midY = Math.min(srcY2, dstY2) - randBetween(30, 80);
 
           flier.animate([
-            { transform: `translate(0,0)`,                                           opacity: 0,   offset: 0    },
-            { transform: `translate(${midX-srcX2}px, ${midY-srcY2}px)`,             opacity: 0.9, offset: 0.45 },
-            { transform: `translate(${dstX2-srcX2}px, ${dstY2-srcY2}px)`,           opacity: 1,   offset: 1    },
+            { transform: 'translate(0,0)',                                         opacity: 0,   offset: 0    },
+            { transform: `translate(${midX-srcX2}px, ${midY-srcY2}px)`,           opacity: 0.9, offset: 0.45 },
+            { transform: `translate(${dstX2-srcX2}px, ${dstY2-srcY2}px)`,         opacity: 1,   offset: 1    },
           ], { duration: 600, easing: 'ease-out', fill: 'forwards' })
             .finished.then(() => {
               flier.remove();
 
-              // Land inside jar as a floater
               const bounds = getJarInnerBounds();
               const landX  = randBetween(bounds.left,  bounds.right  - size);
               const landY  = randBetween(bounds.top,   bounds.bottom - size);
               const speed  = randBetween(0.3, 0.8);
               const angle  = Math.random() * Math.PI * 2;
 
-              const resident = createOrbElement(color, size);
-              resident.style.opacity = '0';
+              const resident = drawing ? createDrawingElement(drawing, size) : createOrbElement(color, size);
+              resident.style.opacity   = drawing ? '1' : '0';
               resident.style.transform = `translate(${landX}px, ${landY}px)`;
               orbCon2.appendChild(resident);
 
-              // Cap to 10 — matches the zoom view's max orb count
               if (orbFloaters.length >= 10) {
                 const evicted = orbFloaters.shift();
                 evicted.el.remove();
               }
-
               orbFloaters.push({
                 el: resident,
                 x: landX, y: landY,
                 vx: Math.cos(angle) * speed,
                 vy: Math.sin(angle) * speed,
                 phase: Math.random() * Math.PI * 2,
-                size,
-                color,
+                size, color,
+                isImage: !!drawing,
               });
-
               startFloatLoop();
             });
         }, i * 50);
@@ -1221,27 +1322,171 @@
       btn.style.display = hasText ? 'inline-block' : 'none';
     }
 
-    // Seal & Store
+    // Seal btn now opens draw step instead of sealing directly
     sealBtn.addEventListener('click', () => {
       const text = lines.join('\n').trim();
       if (!text) return;
+      openDrawStep(text);
+    });
 
-      // Save letter
-      const letters = getLetters();
-      letters.push({
-        text,
-        date: new Date().toLocaleString('en-US', { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' })
+    jarWrap.addEventListener('click', openJarView);
+
+    // Init
+    updateJarUI();
+    const _jarImg = document.getElementById('jarImg');
+    if (_jarImg.complete && _jarImg.naturalWidth > 0) {
+      restoreOrbs(getOrbs());
+    } else {
+      _jarImg.addEventListener('load', () => restoreOrbs(getOrbs()), { once: true });
+    }
+
+    // ── DRAW STEP ─────────────────────────────────────
+    let _pendingText    = '';
+    let _pendingDate    = '';
+    let _drawCtx        = null;
+    let _isDrawing      = false;
+    let _drawColor      = '#1a0e06';
+    let _drawEraserMode = false;
+    let _drawHasStrokes = false;
+
+    function openDrawStep(text) {
+      _pendingText = text;
+      _pendingDate = new Date().toLocaleString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit', minute: '2-digit',
       });
+
+      document.getElementById('drawLetterDate').textContent = _pendingDate;
+      document.getElementById('drawLetterText').textContent = _pendingText;
+
+      // Reset toolbar state
+      _drawColor      = '#1a0e06';
+      _drawEraserMode = false;
+      _drawHasStrokes = false;
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      document.querySelector('.color-swatch[data-color="#1a0e06"]').classList.add('active');
+      document.getElementById('eraserBtn').classList.remove('active');
+      document.getElementById('placeInJarBtn').disabled = true;
+
+      document.getElementById('drawStep').classList.add('open');
+
+      // Wait for layout before sizing canvas
+      requestAnimationFrame(() => requestAnimationFrame(initDrawCanvas));
+    }
+
+    function initDrawCanvas() {
+      const canvas = document.getElementById('drawCanvas');
+      const rect   = canvas.getBoundingClientRect();
+      canvas.width  = Math.round(rect.width);
+      canvas.height = Math.round(rect.height);
+      _drawCtx = canvas.getContext('2d');
+      _drawCtx.fillStyle = '#f7efe0';
+      _drawCtx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function closeDrawStep() {
+      document.getElementById('drawStep').classList.remove('open');
+      _drawCtx = null;
+    }
+
+    // Canvas drawing events
+    (function () {
+      const canvas = document.getElementById('drawCanvas');
+
+      function getPos(e) {
+        const rect   = canvas.getBoundingClientRect();
+        const scaleX = canvas.width  / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const src    = e.touches ? e.touches[0] : e;
+        return {
+          x: (src.clientX - rect.left) * scaleX,
+          y: (src.clientY - rect.top)  * scaleY,
+        };
+      }
+
+      function startDraw(e) {
+        if (!_drawCtx) return;
+        e.preventDefault();
+        _isDrawing = true;
+        const pos = getPos(e);
+        _drawCtx.beginPath();
+        _drawCtx.moveTo(pos.x, pos.y);
+      }
+
+      function continueDraw(e) {
+        if (!_isDrawing || !_drawCtx) return;
+        e.preventDefault();
+        const pos = getPos(e);
+        _drawCtx.globalCompositeOperation = 'source-over';
+        _drawCtx.strokeStyle = _drawEraserMode ? '#f7efe0' : _drawColor;
+        _drawCtx.lineWidth   = _drawEraserMode ? 18 : 3;
+        _drawCtx.lineCap     = 'round';
+        _drawCtx.lineJoin    = 'round';
+        _drawCtx.lineTo(pos.x, pos.y);
+        _drawCtx.stroke();
+        if (!_drawHasStrokes && !_drawEraserMode) {
+          _drawHasStrokes = true;
+          document.getElementById('placeInJarBtn').disabled = false;
+        }
+      }
+
+      function endDraw() { _isDrawing = false; }
+
+      canvas.addEventListener('mousedown',  startDraw);
+      canvas.addEventListener('mousemove',  continueDraw);
+      canvas.addEventListener('mouseup',    endDraw);
+      canvas.addEventListener('mouseleave', endDraw);
+      canvas.addEventListener('touchstart', startDraw,    { passive: false });
+      canvas.addEventListener('touchmove',  continueDraw, { passive: false });
+      canvas.addEventListener('touchend',   endDraw);
+    })();
+
+    // Color swatches
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+        swatch.classList.add('active');
+        _drawColor      = swatch.dataset.color;
+        _drawEraserMode = false;
+        document.getElementById('eraserBtn').classList.remove('active');
+      });
+    });
+
+    // Eraser toggle
+    document.getElementById('eraserBtn').addEventListener('click', () => {
+      _drawEraserMode = !_drawEraserMode;
+      document.getElementById('eraserBtn').classList.toggle('active', _drawEraserMode);
+      if (_drawEraserMode) {
+        document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      } else {
+        document.querySelector(`.color-swatch[data-color="${_drawColor}"]`)?.classList.add('active');
+      }
+    });
+
+    // Place in jar
+    document.getElementById('placeInJarBtn').addEventListener('click', () => {
+      if (!_drawHasStrokes) return;
+
+      const canvas  = document.getElementById('drawCanvas');
+      const drawing = canvas.toDataURL('image/png');
+
+      // Persist letter with drawing
+      const letters = getLetters();
+      letters.push({ text: _pendingText, date: _pendingDate, drawing });
       saveLetters(letters);
 
-      // One orb per letter
+      // Orb metadata — drawing is included here for the launch animation only,
+      // stripped before writing to localStorage by updateJarUI
       const newOrbData = [{
-        color: ORB_PALETTE[Math.floor(Math.random() * ORB_PALETTE.length)],
-        size:  Math.round(randBetween(14, 22)),
+        color:   ORB_PALETTE[Math.floor(Math.random() * ORB_PALETTE.length)],
+        size:    40,
+        drawing,
       }];
 
-      // Clear typewriter
-      lines = [''];
+      closeDrawStep();
+
+      // Reset typewriter
+      lines     = [''];
       lineIndex = 0;
       carriageX = 0;
       carriage.style.transform = 'translateX(0px)';
@@ -1250,28 +1495,14 @@
       started = false;
       hint.classList.remove('fade');
 
-      // Show jar, persist orbs, clear bounds cache, launch flight
       _cachedBounds = null;
       updateJarUI(newOrbData);
-      launchOrbsToJar(text, newOrbData);
+      launchOrbsToJar(_pendingText, newOrbData);
 
-      // Sealed-away flash
       const flash = document.getElementById('sealFlash');
       flash.classList.add('visible');
       setTimeout(() => flash.classList.remove('visible'), 2200);
     });
-
-    // Open jar view
-    jarWrap.addEventListener('click', openJarView);
-
-    // Init — defer orb restore until jar image is laid out so getBoundingClientRect is valid
-    updateJarUI();
-    const _jarImg = document.getElementById('jarImg');
-    if (_jarImg.complete && _jarImg.naturalWidth > 0) {
-      restoreOrbs(getOrbs());
-    } else {
-      _jarImg.addEventListener('load', () => restoreOrbs(getOrbs()), { once: true });
-    }
   </script>
 
 </body>
