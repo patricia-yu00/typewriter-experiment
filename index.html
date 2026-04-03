@@ -224,45 +224,36 @@
     /* ── JAR ZOOM VIEW ───────────────────────────────── */
     #jarView {
       position: fixed; inset: 0;
-      background: #000;
+      background: #fff;
       z-index: 200;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
-      transform: scale(0.95);
+      transform: scale(0.98);
       transition: opacity 0.4s ease-out, transform 0.4s ease-out;
       pointer-events: none;
     }
     #jarView.open { opacity: 1; transform: scale(1); pointer-events: auto; }
     #jarViewBg {
       position: relative;
-      width: min(90vw, 90vh);
-      height: min(90vw, 90vh);
-      border-radius: 50%;
-      overflow: hidden;
+      height: min(88vh, 62vw);
+      width: auto;
       flex-shrink: 0;
     }
-    #jarViewBg::after {
-      content: '';
-      position: absolute; inset: 0;
-      border-radius: 50%;
-      background: radial-gradient(
-        ellipse at center,
-        transparent 62%,
-        rgba(0,0,0,0.5) 74%,
-        rgba(0,0,0,0.92) 84%,
-        #000 92%
-      );
-      pointer-events: none;
-      z-index: 5;
+    #jarViewBg > img {
+      height: 100%;
+      width: auto;
+      display: block;
+      object-fit: contain;
+      filter: drop-shadow(0 0 40px rgba(200,170,100,0.12));
     }
-    #jarViewBg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* Floater container sits over the glass body of the jar */
     #jarViewOrbContainer {
-      position: absolute; inset: 0;
-      border-radius: 50%;
-      overflow: hidden;
+      position: absolute;
+      top: 38%; left: 22%; right: 22%; bottom: 10%;
       z-index: 10;
+      overflow: hidden;
     }
     .jar-view-orb {
       position: absolute;
@@ -279,7 +270,7 @@
       position: fixed;
       top: 24px; left: 24px;
       background: transparent; border: none;
-      color: rgba(255,255,255,0.6);
+      color: rgba(0,0,0,0.4);
       font-size: 28px;
       cursor: pointer;
       z-index: 201;
@@ -288,7 +279,7 @@
       opacity: 0;
       pointer-events: none;
     }
-    #jarBackBtn:hover { color: #fff; }
+    #jarBackBtn:hover { color: #000; }
     #jarBackBtn.open { opacity: 1; pointer-events: auto; }
 
     #orbTooltip {
@@ -296,9 +287,9 @@
       z-index: 215;
       font-family: 'Special Elite', monospace;
       font-size: clamp(10px, 1.1vw, 13px);
-      color: rgba(255,255,255,0.88);
-      background: rgba(0,0,0,0.62);
-      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(40,24,8,0.88);
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(160,120,70,0.2);
       padding: 4px 10px;
       pointer-events: none;
       opacity: 0;
@@ -543,6 +534,19 @@
     #placeInJarBtn:hover:not(:disabled) { background: #d4b87a; }
     #placeInJarBtn:disabled { opacity: 0.35; cursor: not-allowed; }
 
+    #drawStepCloseBtn {
+      position: absolute;
+      top: 20px; right: 24px;
+      background: transparent; border: none;
+      color: rgba(255,255,255,0.4);
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+      transition: color 0.2s;
+      padding: 4px;
+    }
+    #drawStepCloseBtn:hover { color: rgba(255,255,255,0.9); }
+
     @media (max-width: 600px) {
       #drawStepInner { flex-direction: column; gap: 16px; }
       #drawLetterText { max-height: 20vh; }
@@ -582,7 +586,7 @@
   <!-- Jar zoom view -->
   <div id="jarView">
     <div id="jarViewBg">
-      <img src="perspective1.png" alt="" draggable="false">
+      <img src="jar.png" alt="" draggable="false">
       <div id="jarViewOrbContainer"></div>
     </div>
   </div>
@@ -605,6 +609,7 @@
 
   <!-- Draw step overlay (in-between writing and sealing) -->
   <div id="drawStep">
+    <button id="drawStepCloseBtn">×</button>
     <div id="drawStepInner">
       <div id="drawLetterPanel">
         <div id="drawLetterPaper">
@@ -629,7 +634,7 @@
     <button id="placeInJarBtn" disabled>✦ place in jar ✦</button>
   </div>
 
-  <p class="hint" id="hint">— start typing —</p>
+  <p class="hint" id="hint">— write a message to remember —</p>
 
   <script>
     // ── BUILD KEYBOARD OVERLAY ───────────────────────────────────
@@ -973,18 +978,15 @@
     let _orbTooltipEl     = null;
 
     function getJarViewBounds() {
-      const bg = document.getElementById('jarViewBg');
-      if (!bg) return { cx: 0, cy: 0, r: 0 };
-      const rect   = bg.getBoundingClientRect();
-      const radius = rect.width * 0.24;
-      const cx     = rect.width  * 0.50;
-      const cy     = rect.height * 0.54;
-      return { cx, cy, r: radius };
+      const container = document.getElementById('jarViewOrbContainer');
+      if (!container) return { left: 0, top: 0, right: 200, bottom: 200 };
+      const rect = container.getBoundingClientRect();
+      return { left: 0, top: 0, right: rect.width, bottom: rect.height };
     }
 
     function tickJarView() {
       if (jarViewFloaters.length === 0) { jarViewRafId = null; return; }
-      const { cx, cy, r } = getJarViewBounds();
+      const bounds = getJarViewBounds();
 
       let hoveredIdx = -1;
       jarViewFloaters.forEach((o, i) => {
@@ -1005,15 +1007,10 @@
         }
 
         o.x += o.vx; o.y += o.vy;
-        const dx   = o.x + o.size/2 - cx, dy = o.y + o.size/2 - cy;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist + o.size/2 > r) {
-          const nx = dx/dist, ny = dy/dist;
-          const dot = o.vx*nx + o.vy*ny;
-          o.vx -= 2*dot*nx; o.vy -= 2*dot*ny;
-          const overlap = dist + o.size/2 - r;
-          o.x -= nx*overlap; o.y -= ny*overlap;
-        }
+        if (o.x <= bounds.left)              { o.x = bounds.left;            o.vx =  Math.abs(o.vx); }
+        if (o.x + o.size >= bounds.right)    { o.x = bounds.right  - o.size; o.vx = -Math.abs(o.vx); }
+        if (o.y <= bounds.top)               { o.y = bounds.top;             o.vy =  Math.abs(o.vy); }
+        if (o.y + o.size >= bounds.bottom)   { o.y = bounds.bottom - o.size; o.vy = -Math.abs(o.vy); }
         if (!o.isImage) {
           o.phase += 0.012;
           o.el.style.opacity = 0.65 + 0.35 * Math.sin(o.phase);
@@ -1074,16 +1071,14 @@
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          const { cx, cy, r } = getJarViewBounds();
+          const bounds = getJarViewBounds();
           selectedIndices.forEach(letterIndex => {
             const letter  = letters[letterIndex];
             const o       = orbData[letterIndex] || { color: ORB_PALETTE[Math.floor(Math.random()*ORB_PALETTE.length)], size: 18 };
             const drawing = letter?.drawing;
             const size    = drawing ? 70 : Math.round(randBetween(24, 38));
-            const angle   = Math.random() * Math.PI * 2;
-            const dist    = Math.random() * Math.max(0, r - size);
-            const x = cx - size/2 + Math.cos(angle) * dist;
-            const y = cy - size/2 + Math.sin(angle) * dist;
+            const x = randBetween(bounds.left, Math.max(bounds.left, bounds.right  - size));
+            const y = randBetween(bounds.top,  Math.max(bounds.top,  bounds.bottom - size));
             const speed  = randBetween(0.4, 1.0);
             const vAngle = Math.random() * Math.PI * 2;
 
@@ -1343,7 +1338,9 @@
     // ── DRAW STEP ─────────────────────────────────────
     let _pendingText    = '';
     let _pendingDate    = '';
-    let _drawCtx        = null;
+    let _drawCtx        = null;   // visible canvas (cream background)
+    let _exportCtx      = null;   // hidden canvas (transparent — strokes only)
+    let _exportCanvas   = null;
     let _isDrawing      = false;
     let _drawColor      = '#1a0e06';
     let _drawEraserMode = false;
@@ -1377,16 +1374,28 @@
     function initDrawCanvas() {
       const canvas = document.getElementById('drawCanvas');
       const rect   = canvas.getBoundingClientRect();
-      canvas.width  = Math.round(rect.width);
-      canvas.height = Math.round(rect.height);
+      const w = Math.round(rect.width);
+      const h = Math.round(rect.height);
+
+      // Visible canvas — cream background so drawing feels natural
+      canvas.width  = w;
+      canvas.height = h;
       _drawCtx = canvas.getContext('2d');
       _drawCtx.fillStyle = '#f7efe0';
-      _drawCtx.fillRect(0, 0, canvas.width, canvas.height);
+      _drawCtx.fillRect(0, 0, w, h);
+
+      // Hidden export canvas — transparent, strokes only, goes into the jar
+      _exportCanvas = document.createElement('canvas');
+      _exportCanvas.width  = w;
+      _exportCanvas.height = h;
+      _exportCtx = _exportCanvas.getContext('2d');
     }
 
     function closeDrawStep() {
       document.getElementById('drawStep').classList.remove('open');
-      _drawCtx = null;
+      _drawCtx     = null;
+      _exportCtx   = null;
+      _exportCanvas = null;
     }
 
     // Canvas drawing events
@@ -1404,6 +1413,14 @@
         };
       }
 
+      function applyStroke(ctx, eraser, color) {
+        ctx.globalCompositeOperation = eraser ? 'destination-out' : 'source-over';
+        ctx.strokeStyle = eraser ? 'rgba(0,0,0,1)' : color;
+        ctx.lineWidth   = eraser ? 18 : 3;
+        ctx.lineCap     = 'round';
+        ctx.lineJoin    = 'round';
+      }
+
       function startDraw(e) {
         if (!_drawCtx) return;
         e.preventDefault();
@@ -1411,12 +1428,15 @@
         const pos = getPos(e);
         _drawCtx.beginPath();
         _drawCtx.moveTo(pos.x, pos.y);
+        if (_exportCtx) { _exportCtx.beginPath(); _exportCtx.moveTo(pos.x, pos.y); }
       }
 
       function continueDraw(e) {
         if (!_isDrawing || !_drawCtx) return;
         e.preventDefault();
         const pos = getPos(e);
+
+        // Visible canvas — eraser paints cream to restore background
         _drawCtx.globalCompositeOperation = 'source-over';
         _drawCtx.strokeStyle = _drawEraserMode ? '#f7efe0' : _drawColor;
         _drawCtx.lineWidth   = _drawEraserMode ? 18 : 3;
@@ -1424,6 +1444,14 @@
         _drawCtx.lineJoin    = 'round';
         _drawCtx.lineTo(pos.x, pos.y);
         _drawCtx.stroke();
+
+        // Export canvas — eraser cuts to transparent
+        if (_exportCtx) {
+          applyStroke(_exportCtx, _drawEraserMode, _drawColor);
+          _exportCtx.lineTo(pos.x, pos.y);
+          _exportCtx.stroke();
+        }
+
         if (!_drawHasStrokes && !_drawEraserMode) {
           _drawHasStrokes = true;
           document.getElementById('placeInJarBtn').disabled = false;
@@ -1440,6 +1468,8 @@
       canvas.addEventListener('touchmove',  continueDraw, { passive: false });
       canvas.addEventListener('touchend',   endDraw);
     })();
+
+    document.getElementById('drawStepCloseBtn').addEventListener('click', closeDrawStep);
 
     // Color swatches
     document.querySelectorAll('.color-swatch').forEach(swatch => {
@@ -1467,8 +1497,8 @@
     document.getElementById('placeInJarBtn').addEventListener('click', () => {
       if (!_drawHasStrokes) return;
 
-      const canvas  = document.getElementById('drawCanvas');
-      const drawing = canvas.toDataURL('image/png');
+      // Export from the transparent canvas — just the strokes, no background
+      const drawing = (_exportCanvas || document.getElementById('drawCanvas')).toDataURL('image/png');
 
       // Persist letter with drawing
       const letters = getLetters();
