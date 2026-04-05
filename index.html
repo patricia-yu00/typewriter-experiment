@@ -10,7 +10,7 @@
 
     html, body {
       width: 100%; min-height: 100%;
-      background: #fff;
+      background: #e8e8e6;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -46,6 +46,7 @@
       width: 100%;
       display: block;
       pointer-events: none;
+      mix-blend-mode: multiply;
     }
 
     /* ── CARRIAGE ────────────────────────────────────────────────── */
@@ -59,7 +60,7 @@
       will-change: transform;
       pointer-events: none;
     }
-    .carriage-wrap img { width: 100%; display: block; }
+    .carriage-wrap img { width: 100%; display: block; mix-blend-mode: multiply; }
     .carriage-wrap.returning {
       transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
@@ -195,7 +196,7 @@
       transition: transform 0.15s;
     }
     .jar-wrap:hover { transform: scale(1.04); }
-    .jar-wrap img { width: 100%; display: block; }
+    .jar-wrap img { width: 100%; display: block; mix-blend-mode: multiply; }
     .jar-count {
       position: absolute;
       bottom: 18%; left: 50%;
@@ -224,8 +225,8 @@
     /* ── JAR ZOOM VIEW ───────────────────────────────── */
     #jarView {
       position: fixed; inset: 0;
-      background: #fff;
       z-index: 200;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -235,23 +236,37 @@
       pointer-events: none;
     }
     #jarView.open { opacity: 1; transform: scale(1); pointer-events: auto; }
+
+    /* Blurred background — extends beyond edges to hide blur fringe */
+    #jarViewBlurredBg {
+      position: absolute;
+      inset: -30px;
+      background: url('background.png') center/cover no-repeat;
+      filter: blur(1px) saturate(0.45) hue-rotate(-15deg);
+      z-index: 0;
+    }
+
     #jarViewBg {
       position: relative;
-      height: min(88vh, 62vw);
+      height: min(96vh, 72vw);
       width: auto;
       flex-shrink: 0;
     }
+
     #jarViewBg > img {
       height: 100%;
       width: auto;
       display: block;
       object-fit: contain;
-      filter: drop-shadow(0 0 40px rgba(200,170,100,0.12));
+      position: relative;
+      z-index: 2;
+      mix-blend-mode: multiply;
     }
+
     /* Floater container sits over the glass body of the jar */
     #jarViewOrbContainer {
       position: absolute;
-      top: 38%; left: 22%; right: 22%; bottom: 10%;
+      top: 26%; left: 16%; right: 16%; bottom: 8%;
       z-index: 10;
       overflow: hidden;
     }
@@ -266,11 +281,15 @@
     .jar-view-orb:hover { filter: brightness(1.4); }
     .jar-view-orb.is-image { border-radius: 2px; }
 
+    img.drawing-thumb {
+      border-radius: 2px;
+    }
+
     #jarBackBtn {
       position: fixed;
       top: 24px; left: 24px;
       background: transparent; border: none;
-      color: rgba(0,0,0,0.4);
+      color: rgba(0,0,0,0.35);
       font-size: 28px;
       cursor: pointer;
       z-index: 201;
@@ -279,7 +298,7 @@
       opacity: 0;
       pointer-events: none;
     }
-    #jarBackBtn:hover { color: #000; }
+    #jarBackBtn:hover { color: rgba(0,0,0,0.8); }
     #jarBackBtn.open { opacity: 1; pointer-events: auto; }
 
     #orbTooltip {
@@ -403,18 +422,23 @@
     }
 
     .forget-btn {
-      display: block;
+      display: inline-block;
       margin-top: 22px;
-      background: transparent; border: none;
+      background: transparent;
+      border: 1px solid rgba(160,80,60,0.35);
       font-family: 'Special Elite', monospace;
-      font-size: clamp(9px, 0.9vw, 11px);
-      color: rgba(100,60,20,0.35);
-      letter-spacing: 0.18em;
+      font-size: clamp(10px, 1vw, 12px);
+      color: rgba(140,60,40,0.55);
+      letter-spacing: 0.15em;
       cursor: pointer;
-      padding: 0;
-      transition: color 0.2s;
+      padding: 6px 18px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
     }
-    .forget-btn:hover { color: rgba(160,40,20,0.7); }
+    .forget-btn:hover {
+      background: rgba(160,60,40,0.08);
+      border-color: rgba(160,60,40,0.6);
+      color: rgba(140,40,20,0.85);
+    }
 
     /* ── DRAW STEP OVERLAY ───────────────────────────────────────── */
     #drawStep {
@@ -585,6 +609,7 @@
 
   <!-- Jar zoom view -->
   <div id="jarView">
+    <div id="jarViewBlurredBg"></div>
     <div id="jarViewBg">
       <img src="jar.png" alt="" draggable="false">
       <div id="jarViewOrbContainer"></div>
@@ -857,11 +882,11 @@
     function createDrawingElement(drawing, size) {
       const el = document.createElement('img');
       el.src = drawing;
+      el.className = 'drawing-thumb';
       el.style.position = 'absolute';
       el.style.width  = size + 'px';
       el.style.height = size + 'px';
       el.style.objectFit = 'contain';
-      el.style.borderRadius = '2px';
       el.draggable = false;
       return el;
     }
@@ -1076,7 +1101,7 @@
             const letter  = letters[letterIndex];
             const o       = orbData[letterIndex] || { color: ORB_PALETTE[Math.floor(Math.random()*ORB_PALETTE.length)], size: 18 };
             const drawing = letter?.drawing;
-            const size    = drawing ? 70 : Math.round(randBetween(24, 38));
+            const size    = drawing ? 110 : Math.round(randBetween(24, 38));
             const x = randBetween(bounds.left, Math.max(bounds.left, bounds.right  - size));
             const y = randBetween(bounds.top,  Math.max(bounds.top,  bounds.bottom - size));
             const speed  = randBetween(0.4, 1.0);
