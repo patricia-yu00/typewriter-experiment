@@ -805,9 +805,21 @@
       advanceCarriage(); playClick();
     }
     function doBackspace() {
-      if (!lines[lineIndex].length) return;
-      lines[lineIndex] = lines[lineIndex].slice(0, -1); updateDisplay();
-      retreatCarriage(); playClick();
+      if (lines[lineIndex].length > 0) {
+        lines[lineIndex] = lines[lineIndex].slice(0, -1);
+        updateDisplay();
+        retreatCarriage();
+        playClick();
+      } else if (lineIndex > 0) {
+        // Current line is empty — remove it and return to the previous line
+        lines.splice(lineIndex, 1);
+        lineIndex--;
+        updateDisplay();
+        // Restore carriage to the end of the previous line
+        carriageX = Math.min(lines[lineIndex].length * STEP_PX, MAX_X);
+        carriage.style.transform = `translateX(${carriageX}px)`;
+        playClick();
+      }
     }
 
     document.addEventListener('keydown', e => {
