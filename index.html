@@ -75,7 +75,6 @@
       flex-direction: column;
       justify-content: flex-end;
       padding-bottom: 2px;
-      padding-right: 6px;
     }
     .typed-text {
       font-family: 'Special Elite', 'Courier New', monospace;
@@ -799,10 +798,18 @@
     // ── TYPING ───────────────────────────────────────────────────
     function typeChar(ch) {
       if (!started) { started = true; hint.classList.add('fade'); }
-      lines[lineIndex] += ch; updateDisplay();
-      if (currentLineWidth() >= paperWidth() - 14) {
-        playClick(); returnCarriage(); return;
+      // Measure AFTER tentatively adding the character
+      lines[lineIndex] += ch;
+      if (currentLineWidth() >= paperWidth() - 4) {
+        // Character would overflow — pull it back and wrap it to the next line
+        lines[lineIndex] = lines[lineIndex].slice(0, -1);
+        returnCarriage();        // opens new line, increments lineIndex
+        lines[lineIndex] += ch;  // place char on new line
+        updateDisplay();
+        advanceCarriage(); playClick();
+        return;
       }
+      updateDisplay();
       advanceCarriage(); playClick();
     }
     function doBackspace() {
